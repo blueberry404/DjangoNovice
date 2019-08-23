@@ -8,9 +8,13 @@ from .models import Article, Author
 
 # Create your views here.
 class ArticleView(APIView):
-    def get(self, request):
-        articles = Article.objects.all()
-        serializer = ArticleSerializer(articles, many=True)
+    def get(self, request, pk=None):
+        if pk:
+            article = get_object_or_404(Article.objects.all(), pk=pk)
+            serializer = ArticleSerializer(article)
+        else:
+            articles = Article.objects.all()
+            serializer = ArticleSerializer(articles, many=True)
         return Response({"articles": serializer.data})
     
     def post(self, request):
